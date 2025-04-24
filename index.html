@@ -1,58 +1,88 @@
 <!DOCTYPE html>
 <html lang="pt-BR">
 <head>
-  <meta charset="UTF-8" />
-  <title>Validador de CPF</title>
+  <meta charset="UTF-8">
+  <title>Validação de CPF</title>
   <style>
+    body {
+      font-family: Arial, sans-serif;
+      max-width: 400px;
+      margin: 40px auto;
+      padding: 20px;
+      border: 1px solid #ccc;
+      border-radius: 10px;
+    }
+    h2 {
+      font-size: 18px;
+      margin-bottom: 5px;
+    }
+    small {
+      font-size: 12px;
+      color: #555;
+    }
     input, button {
       padding: 10px;
-      font-size: 16px;
+      margin-top: 10px;
       width: 100%;
+      box-sizing: border-box;
     }
+    .valido { color: green; font-weight: bold; }
+    .invalido { color: red; font-weight: bold; }
   </style>
 </head>
 <body>
-  <h3>Digite seu CPF (somente números, sem pontos ou traços).</h3>
+  <h2>Digite seu CPF (somente números, sem pontos ou traços).</h2>
   <small>Verifique se o número está correto para evitar problemas no processo.</small>
-  <input type="text" id="cpf" placeholder="Digite o CPF" maxlength="14" />
-  <button onclick="validar()">Validar</button>
+  
+  <input type="text" id="cpf" placeholder="000.000.000-00" maxlength="14" oninput="formatarCPF(this)">
+  <button onclick="validarCPF()">Validar</button>
+  <p id="resultado"></p>
 
   <script>
-    function formatCPF(cpf) {
-      return cpf.replace(/\D/g, '')
-        .replace(/(\d{3})(\d)/, '$1.$2')
-        .replace(/(\d{3})(\d)/, '$1.$2')
-        .replace(/(\d{3})(\d{1,2})$/, '$1-$2');
+    function formatarCPF(input) {
+      let value = input.value.replace(/\D/g, '').slice(0, 11);
+      value = value.replace(/(\d{3})(\d)/, '$1.$2');
+      value = value.replace(/(\d{3})(\d)/, '$1.$2');
+      value = value.replace(/(\d{3})(\d{1,2})$/, '$1-$2');
+      input.value = value;
     }
 
-    function validarCPF(cpf) {
-      cpf = cpf.replace(/\D/g, '');
-      if (cpf.length !== 11 || /^(\d)\1+$/.test(cpf)) return false;
-      let soma = 0, resto;
+    function validarCPF() {
+      let cpf = document.getElementById("cpf").value.replace(/\D/g, '');
+      let resultado = document.getElementById("resultado");
 
-      for (let i = 1; i <= 9; i++) soma += parseInt(cpf.charAt(i - 1)) * (11 - i);
-      resto = (soma * 10) % 11;
-      if (resto === 10 || resto === 11) resto = 0;
-      if (resto !== parseInt(cpf.charAt(9))) return false;
+      if (cpf.length !== 11 || /^(\d)\1+$/.test(cpf)) {
+        resultado.innerText = "CPF inválido";
+        resultado.className = "invalido";
+        return;
+      }
+
+      let soma = 0;
+      for (let i = 0; i < 9; i++) {
+        soma += parseInt(cpf.charAt(i)) * (10 - i);
+      }
+      let digito1 = 11 - (soma % 11);
+      if (digito1 >= 10) digito1 = 0;
+
+      if (parseInt(cpf.charAt(9)) !== digito1) {
+        resultado.innerText = "CPF inválido";
+        resultado.className = "invalido";
+        return;
+      }
 
       soma = 0;
-      for (let i = 1; i <= 10; i++) soma += parseInt(cpf.charAt(i - 1)) * (12 - i);
-      resto = (soma * 10) % 11;
-      if (resto === 10 || resto === 11) resto = 0;
-      if (resto !== parseInt(cpf.charAt(10))) return false;
+      for (let i = 0; i < 10; i++) {
+        soma += parseInt(cpf.charAt(i)) * (11 - i);
+      }
+      let digito2 = 11 - (soma % 11);
+      if (digito2 >= 10) digito2 = 0;
 
-      return true;
-    }
-
-    function validar() {
-      const cpfInput = document.getElementById('cpf');
-      cpfInput.value = formatCPF(cpfInput.value);
-      if (validarCPF(cpfInput.value)) {
-        alert("CPF válido!");
-        // Envia confirmação para o Jotform
-        window.parent.postMessage({ cpfValidado: true }, '*');
+      if (parseInt(cpf.charAt(10)) !== digito2) {
+        resultado.innerText = "CPF inválido";
+        resultado.className = "invalido";
       } else {
-        alert("CPF inválido!");
+        resultado.innerText = "CPF válido";
+        resultado.className = "valido";
       }
     }
   </script>
