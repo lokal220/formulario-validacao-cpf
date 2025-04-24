@@ -1,40 +1,92 @@
 <!DOCTYPE html>
 <html lang="pt-BR">
 <head>
-  <meta charset="UTF-8">
-  <title>Validador de CPF</title>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Validação de CPF</title>
   <style>
     body {
-      font-family: Arial, sans-serif;
-      max-width: 400px;
-      margin: 40px auto;
+      font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+      background-color: #f7f1eb;
+      margin: 0;
       padding: 20px;
-      border: 1px solid #ccc;
-      border-radius: 10px;
+      color: #5c3919;
     }
-    input, button {
-      padding: 10px;
-      margin-top: 10px;
+
+    .container {
+      max-width: 500px;
+      margin: 0 auto;
+      background-color: #fff;
+      border-radius: 12px;
+      padding: 30px;
+      box-shadow: 0px 0px 15px rgba(0, 0, 0, 0.1);
+    }
+
+    h2 {
+      font-size: 18px;
+      margin-bottom: 10px;
+      font-weight: bold;
+    }
+
+    p {
+      font-size: 14px;
+      color: #927154;
+      margin-bottom: 20px;
+    }
+
+    input[type="text"] {
       width: 100%;
+      padding: 12px;
+      border-radius: 6px;
+      border: 1px solid #ccc;
+      font-size: 16px;
+      margin-bottom: 15px;
     }
-    .valido { color: green; font-weight: bold; }
-    .invalido { color: red; font-weight: bold; }
+
+    button {
+      width: 100%;
+      padding: 14px;
+      background-color: #ec5c1c;
+      color: #fff;
+      border: none;
+      border-radius: 6px;
+      font-size: 16px;
+      cursor: pointer;
+    }
+
+    button:hover {
+      background-color: #cf4d14;
+    }
+
+    #resultado {
+      margin-top: 15px;
+      font-weight: bold;
+    }
+
+    .valido {
+      color: green;
+    }
+
+    .invalido {
+      color: red;
+    }
   </style>
 </head>
 <body>
-  <h2>Validador de CPF</h2>
-  <input type="text" id="cpf" placeholder="Digite o CPF" maxlength="14">
-  <button onclick="validarCPF()">Validar</button>
-  <p id="resultado"></p>
+  <div class="container">
+    <h2>Digite seu CPF (somente números, sem pontos ou traços).</h2>
+    <p>Verifique se o número está correto para evitar problemas no processo.</p>
+    <input type="text" id="cpf" maxlength="11" placeholder="00000000000" />
+    <button onclick="validarCPF()">Validar</button>
+    <div id="resultado"></div>
+  </div>
 
   <script>
     function validarCPF() {
-      let cpf = document.getElementById("cpf").value.replace(/\D/g, '');
-      let resultado = document.getElementById("resultado");
+      let cpf = document.getElementById('cpf').value.replace(/[^\d]+/g, '');
 
       if (cpf.length !== 11 || /^(\d)\1+$/.test(cpf)) {
-        resultado.innerText = "CPF inválido";
-        resultado.className = "invalido";
+        mostrarResultado(false);
         return;
       }
 
@@ -42,12 +94,11 @@
       for (let i = 0; i < 9; i++) {
         soma += parseInt(cpf.charAt(i)) * (10 - i);
       }
-      let digito1 = 11 - (soma % 11);
-      if (digito1 >= 10) digito1 = 0;
 
-      if (parseInt(cpf.charAt(9)) !== digito1) {
-        resultado.innerText = "CPF inválido";
-        resultado.className = "invalido";
+      let resto = (soma * 10) % 11;
+      if (resto === 10 || resto === 11) resto = 0;
+      if (resto !== parseInt(cpf.charAt(9))) {
+        mostrarResultado(false);
         return;
       }
 
@@ -55,15 +106,27 @@
       for (let i = 0; i < 10; i++) {
         soma += parseInt(cpf.charAt(i)) * (11 - i);
       }
-      let digito2 = 11 - (soma % 11);
-      if (digito2 >= 10) digito2 = 0;
 
-      if (parseInt(cpf.charAt(10)) !== digito2) {
-        resultado.innerText = "CPF inválido";
-        resultado.className = "invalido";
+      resto = (soma * 10) % 11;
+      if (resto === 10 || resto === 11) resto = 0;
+      if (resto !== parseInt(cpf.charAt(10))) {
+        mostrarResultado(false);
+        return;
+      }
+
+      mostrarResultado(true);
+    }
+
+    function mostrarResultado(valido) {
+      const div = document.getElementById('resultado');
+      if (valido) {
+        div.textContent = 'CPF válido';
+        div.className = 'valido';
+        window.parent.postMessage({ cpfValido: true }, '*');
       } else {
-        resultado.innerText = "CPF válido";
-        resultado.className = "valido";
+        div.textContent = 'CPF inválido';
+        div.className = 'invalido';
+        window.parent.postMessage({ cpfValido: false }, '*');
       }
     }
   </script>
