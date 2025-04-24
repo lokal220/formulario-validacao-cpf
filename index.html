@@ -5,79 +5,62 @@
   <title>Validação de CPF</title>
   <style>
     html, body {
+      height: 700px;
       margin: 0;
       padding: 0;
-      width: 100%;
-      height: 100%;
-      background-color: #f7f1eb;
-      font-family: system-ui, sans-serif;
-      display: flex;
-      align-items: center;
-      justify-content: center;
+      background: #f7f1eb;
+      font-family: system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial;
     }
-
     .container {
-      background-color: #fff;
-      border-radius: 15px;
-      padding: 30px;
       max-width: 400px;
-      width: 90%;
-      box-shadow: 0 4px 20px rgba(0, 0, 0, 0.1);
+      margin: 50px auto;
+      padding: 30px;
+      background: white;
+      border-radius: 16px;
+      box-shadow: 0 4px 20px rgba(0,0,0,0.05);
     }
-
     h2 {
-      font-size: 18px;
       color: #5C3919;
+      font-size: 18px;
       margin-bottom: 5px;
     }
-
     small {
-      font-size: 12px;
+      font-size: 13px;
       color: #927154;
     }
-
     input, button {
-      width: 100%;
       padding: 12px;
       margin-top: 15px;
-      font-size: 16px;
+      width: 100%;
       box-sizing: border-box;
-      border: 1px solid #ccc;
       border-radius: 8px;
-      font-family: inherit;
+      border: 1px solid #ccc;
+      font-size: 15px;
     }
-
     button {
       background-color: #EC5C1C;
       color: white;
       border: none;
+      font-weight: bold;
       cursor: pointer;
-      font-weight: bold;
-      transition: background 0.3s;
+      transition: background-color 0.3s;
     }
-
     button:hover {
-      background-color: #d44f17;
+      background-color: #d44d12;
     }
-
-    .valido {
-      color: green;
+    #resultado {
+      margin-top: 15px;
+      text-align: center;
       font-weight: bold;
-      margin-top: 10px;
     }
-
-    .invalido {
-      color: red;
-      font-weight: bold;
-      margin-top: 10px;
-    }
+    .valido { color: green; }
+    .invalido { color: red; }
   </style>
 </head>
 <body>
   <div class="container">
-    <h2>Digite seu CPF (somente números, sem pontos ou traços).</h2>
+    <h2>Digite seu CPF (somente números).</h2>
     <small>Verifique se o número está correto para evitar problemas no processo.</small>
-    
     <input type="text" id="cpf" placeholder="000.000.000-00" maxlength="14" oninput="formatarCPF(this)">
     <button onclick="validarCPF()">Validar</button>
     <p id="resultado"></p>
