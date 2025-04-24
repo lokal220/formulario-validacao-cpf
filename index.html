@@ -122,12 +122,12 @@
       if (valido) {
         div.textContent = 'CPF válido';
         div.className = 'valido';
-        // Envia mensagem para o Jotform indicando que está válido
-        window.parent.postMessage({ cpfValido: true }, '*');
+        // Envia a string "valido" como valor
+        window.parent.postMessage({ liberarAvanco: 'valido' }, '*');
       } else {
         div.textContent = 'CPF inválido';
         div.className = 'invalido';
-        window.parent.postMessage({ cpfValido: false }, '*');
+        window.parent.postMessage({ liberarAvanco: '' }, '*');
       }
     }
   </script>
