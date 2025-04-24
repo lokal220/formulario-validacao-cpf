@@ -6,26 +6,27 @@
   <style>
     body {
       font-family: Arial, sans-serif;
-      background-color: #fffaf5;
+      background-color: #f1e9e3;
       margin: 0;
       padding: 0;
     }
     .container {
-      max-width: 500px;
-      margin: 40px auto;
+      max-width: 520px;
+      margin: 60px auto;
       background: #fff;
-      padding: 30px;
-      border-radius: 8px;
-      box-shadow: 0 4px 15px rgba(0,0,0,0.1);
+      padding: 40px;
+      border-radius: 16px;
+      box-shadow: 0 4px 20px rgba(0,0,0,0.1);
       text-align: center;
     }
     h2 {
       margin-bottom: 10px;
-      color: #432000;
+      color: #3a1f00;
+      font-size: 20px;
     }
     p {
       font-size: 14px;
-      color: #555;
+      color: #666;
       margin-bottom: 20px;
     }
     input[type="text"] {
@@ -74,7 +75,7 @@
     function validarCPF() {
       let cpf = document.getElementById('cpf').value.replace(/[^\d]/g, '');
 
-      // Mantém o CPF "00000060011" como válido, mesmo sendo falso
+      // CPF manual válido para teste
       if (cpf === '00000060011') {
         mostrarResultado(true);
         return;
@@ -119,10 +120,10 @@
         div.textContent = 'CPF válido';
         div.className = 'valido';
 
-        // Enviar mensagem para o formulário Jotform
+        // postMessage para Jotform
         window.parent.postMessage({
           type: 'control',
-          field: 'liberarAvanco', // deve ser o nome único do campo no Jotform
+          field: 'liberarAvanco',
           value: 'valido'
         }, '*');
       } else {
