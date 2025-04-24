@@ -1,0 +1,45 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+  <meta charset="UTF-8">
+  <title>Cadastro com Validação de CPF</title>
+</head>
+<body>
+  <h2>Formulário com Validação de CPF</h2>
+  
+  <form id="formulario" action="https://submit.jotform.com/submit/SEU_ID_DO_FORMULARIO/" method="post" target="_blank">
+    <label>CPF:
+      <input id="cpf" name="cpf" type="text" placeholder="000.000.000-00" />
+    </label><br><br>
+
+    <!-- Campos adicionais (como nome, print da encomenda, etc) -->
+    
+    <button type="submit">Enviar</button>
+  </form>
+
+  <script>
+    function validarCPF(cpf) {
+      cpf = cpf.replace(/[^\d]+/g, '');
+      if (cpf.length !== 11 || /^(\d)\1{10}$/.test(cpf)) return false;
+      let soma = 0, resto;
+      for (let i = 1; i <= 9; i++) soma += parseInt(cpf[i - 1]) * (11 - i);
+      resto = (soma * 10) % 11;
+      if (resto === 10 || resto === 11) resto = 0;
+      if (resto !== parseInt(cpf[9])) return false;
+      soma = 0;
+      for (let i = 1; i <= 10; i++) soma += parseInt(cpf[i - 1]) * (12 - i);
+      resto = (soma * 10) % 11;
+      if (resto === 10 || resto === 11) resto = 0;
+      return resto === parseInt(cpf[10]);
+    }
+
+    document.getElementById('formulario').addEventListener('submit', function (e) {
+      const cpf = document.getElementById('cpf').value;
+      if (!validarCPF(cpf)) {
+        alert("CPF inválido!");
+        e.preventDefault();
+      }
+    });
+  </script>
+</body>
+</html>
