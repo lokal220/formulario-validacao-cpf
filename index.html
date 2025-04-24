@@ -83,6 +83,9 @@
       } else {
         resultado.innerText = "CPF válido";
         resultado.className = "valido";
+
+        // Envia sinal para o Jotform que CPF foi validado
+        window.parent.postMessage({ cpfValidado: true }, '*');
       }
     }
   </script>
