@@ -39,10 +39,15 @@
       padding: 10px;
       font-size: 16px;
       border-radius: 6px;
-      border: 1px solid #ccc;
+      border: 2px solid #f68b1f; /* Borda laranja */
       margin-bottom: 10px;
       box-sizing: border-box;
       text-align: center;
+      outline: none; /* Remove a borda azul padrão quando clica */
+      transition: 0.3s ease;
+    }
+    input[type="text"]:focus {
+      border-color: #d57714; /* Um laranja mais forte ao focar */
     }
     #cpf-status {
       font-size: 14px;
